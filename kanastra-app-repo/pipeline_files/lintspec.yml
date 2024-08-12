@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing source NPM dependencies...
+      - npm --prefix ./kanastra-app install
+  pre_build:
+    commands:
+      - echo Install linting tool...
+      - npm --prefix ./kanastra-app install eslint
+      - npm --prefix ./kanastra-app init --force --yes
+  build:
+    commands:
+      - echo Linting the code...
+      - cd kanastra-app
+      - npx eslint .eslintrc.js

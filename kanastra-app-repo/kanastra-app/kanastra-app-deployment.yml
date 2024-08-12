@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kanastra-app
+  labels:
+    app: kanastra-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kanastra-app
+  template:
+    metadata:
+      labels:
+        app: kanastra-app
+    spec:
+      securityContext:
+        runAsUser: 10000
+        runAsGroup: 30000
+        fsGroup: 20000
+        runAsNonRoot: true
+      containers:
+        - name: kanastra-app
+          image:  ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/kanastra-app:${IMAGE_TAG}
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "125m"
+            limits:
+              memory: "200Mi"
+              cpu: "250m"
